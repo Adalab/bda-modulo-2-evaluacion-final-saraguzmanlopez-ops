@@ -329,8 +329,8 @@ From rental;
 -- hacemos conexion entre tablas 
 
 SELECT f.title
-FROM film AS f -- de film a inventory, film_id
-	INNER JOIN inventory AS i
+FROM film AS f 
+	INNER JOIN inventory AS i -- de film a inventory, film_id
 		ON f.film_id=i.film_id
 	INNER JOIN rental AS r --  de inventory a rental, inventory_id
 		ON i.inventory_id=r.inventory_id;
@@ -342,11 +342,81 @@ FROM film AS f -- de film a inventory, film_id
 SELECT DISTINCT f.title as titulo,
     DATEDIFF(r.return_date, r.rental_date) AS num_dias_alquilado
 FROM film AS f
-	INNER JOIN inventory AS i -- de film a inventory, film_id
+	INNER JOIN inventory AS i
 		ON f.film_id = i.film_id
-	INNER JOIN rental AS r -- de inventory a rental , inventory_id
+	INNER JOIN rental AS r 
 		ON i.inventory_id = r.inventory_id
 WHERE r.rental_id IN (
 						SELECT rental_id
 						FROM rental
 						WHERE DATEDIFF(return_date, rental_date) > 5);
+
+
+
+/*EJERCICIO 23
+Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría"Horror".
+ Utiliza una subconsulta para encontrar los actores que han actuado en películas de la
+categoría "Horror" y luego exclúyelos de la lista de actores.
+*/
+
+-- PARTE 1, Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría"Horror".
+
+
+ -- sacamos la correspondencia de tabla a tabla;
+ SELECT 
+    c.name AS categoria,
+    a.first_name AS nombre_actor,
+    a.last_name AS apellido_actor
+FROM actor AS a -- de actor a film_actor , actor_id
+		INNER JOIN film_actor AS fa
+			ON a.actor_id=fa.actor_id
+		INNER JOIN  film AS f -- de film_actor a film , actor_id
+			ON fa.actor_id =f.actor_id
+		INNER JOIN film_category  AS fc-- de film a film_category , film_id
+			ON f.film_id =fc.film_id
+		INNER JOIN category AS c
+			ON fc.category_id=c.category_id;
+            
+-- condicion, sacar la correspondencia con la categoria horror
+
+
+SELECT a.actor_id 
+    FROM film_actor 
+		JOIN film_category 
+			ON film_actor.film_id = film_category.film_id
+		JOIN category 
+			ON film_category.category_id = category.category_id
+    WHERE category.name = 'Horror';
+
+
+
+-- query final 
+
+SELECT c.name AS categoria,
+    a.first_name AS nombre_actor,
+    a.last_name AS apellido_actor
+    
+FROM actor AS a
+		INNER JOIN film_actor AS fa 
+			ON a.actor_id = fa.actor_id
+		INNER JOIN film_category AS fc 
+			ON fa.film_id = fc.film_id
+		INNER JOIN category AS c 
+			ON fc.category_id = c.category_id
+WHERE a.actor_id not IN ( -- ponemos la condicion
+
+					-- unimos film_actor, que lo uno por actor_id para sacar nombres y apellido con category
+                    -- como es una sub-consulta utilizo el 1en todos los alias
+					SELECT fa1.actor_id
+							FROM film_actor AS fa1 -- de film actor a film category , film_id
+								INNER JOIN film_category AS fc1
+									ON fa1.film_id = fc1.film_id
+								INNER JOIN category AS c1  -- de film_category a category, category_id
+									ON fc1.category_id = c1.category_id
+					WHERE c1.name = 'Horror' -- c1=categori de la subconsulta
+				)
+ORDER BY a.last_name, a.first_name;
+
+
+/*EJERCICIO 24
+*/
