@@ -26,7 +26,6 @@ FROM Film
 WHERE description LIKE '% amazing %';-- al poner la palabra entre % nos aseguramos que la encuentre
 
 
-
 /*EJERCICIO 4
 Encuentra el título de todas las películas que tengan una duración mayor a 120 minutos.
 */
