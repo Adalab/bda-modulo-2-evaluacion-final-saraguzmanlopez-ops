@@ -15,7 +15,7 @@ SELECT  title AS titulo,-- pongo alias, en este caso, para que la columna aparez
 FROM film
 WHERE rating ='PG-13' ;
 
-/*EJERICIO 3
+/*EJERCICIO 3
 Encuentra el título y la descripción de todas las películas que 
 contengan la palabra "amazing" en su descripción.
 */
@@ -27,7 +27,7 @@ WHERE description LIKE '% amazing %';-- al poner la palabra entre % nos aseguram
 
 
 
-/*EJERICIO 4
+/*EJERCICIO 4
 Encuentra el título de todas las películas que tengan una duración mayor a 120 minutos.
 */
 SELECT  title AS titulo,
@@ -35,14 +35,14 @@ SELECT  title AS titulo,
 FROM film
 WHERE length >120;
 
-/*EJERICIO 5
+/*EJERCICIO 5
 Recupera los nombres de todos los actores.
 */
 
 SELECT   concat (first_name ,'  ' , last_name ) as nombre -- pongo comillas con espacio en blanco para que se vea nombre, espacio, apellido, quedando asi mas natural 
 FROM actor;
 
-/*EJERICIO 6
+/*EJERCICIO 6
 Encuentra el nombre y apellido de los actores que tengan "Gibson" en su apellido.
 */
 
@@ -51,7 +51,7 @@ SELECT  first_name AS nombre,
 FROM actor
 WHERE last_name  LIKE '%GIBSON%'; -- con '%like%' encontramos la palabra que queremos buscar
 
-/*EJERICIO 7
+/*EJERCICIO 7
 Encuentra los nombres de los actores que tengan un actor_id entre 10 y 20
 */
 
@@ -68,7 +68,7 @@ WHERE actor_id BETWEEN 10 AND 20;
 
 
 
-/*EJERICIO 8
+/*EJERCICIO 8
 Encuentra el título de las películas en la tabla film que no sean ni "R" ni "PG-13" en cuanto a su
 clasificación.
 */
@@ -83,7 +83,7 @@ SELECT  title AS titulo
 FROM film
 WHERE rating not in ('r','PG-13') ;
 
-/*EJERICIO 9
+/*EJERCICIO 9
 Encuentra la cantidad total de películas en cada clasificación de la tabla film y muestra la
 clasificación junto con el recuento.
 */
@@ -95,7 +95,7 @@ GROUP BY rating
 ORDER BY total_peliculas DESC; -- ordeno de mayor a menor segun categoria
 
 
-/*EJERICIO 10
+/*EJERCICIO 10
 Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, 
 su nombre y apellido junto con la cantidad de películas alquiladas.
 */
@@ -116,7 +116,7 @@ GROUP BY c.customer_id,
 ORDER BY total_alquiladas asc; -- ordeno de menos alquiladas a mas
 	
 
-/*EJERICIO 11
+/*EJERCICIO 11
 Encuentra la cantidad total de películas alquiladas por categoría y
  muestra el nombre de la categoría junto con el recuento de alquileres.*/
 
@@ -138,7 +138,7 @@ GROUP BY c.name
 ORDER BY total_alquiladas DESC;
 
     
-/*EJERICIO 12
+/*EJERCICIO 12
 Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y
 muestra la clasificación junto con el promedio de duración.
 */
@@ -157,7 +157,7 @@ ORDER BY promedio_duracion DESC;
 
 
 
-/*EJERICIO 13
+/*EJERCICIO 13
 Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love"
 */
 
@@ -173,7 +173,7 @@ FROM actor AS a
 WHERE f.title = "Indian Love";
 		
 
-/*EJERICIO 14
+/*EJERCICIO 14
 Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
 */
 
@@ -182,7 +182,7 @@ FROM film
 WHERE description LIKE '%dog%' or description LIKE '%cat%';
 
 
-/*EJERICIO 15
+/*EJERCICIO 15
 .Hay algún actor o actriz que no aparezca en ninguna película en la tabla film_actor.
 */
 SELECT actor_id
@@ -202,7 +202,7 @@ FROM actor as a
 WHERE fa.actor_id is null; 
 -- esta query se devuelve vacia por lo tanto hay 0 actores/actrices que no aparezcan en ninguna pelicula de la tabla film_act
 
-/*EJERICIO 16
+/*EJERCICIO 16
 Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010
 */
 SELECT title,release_year
@@ -219,6 +219,7 @@ SELECT title
 FROM film
 where release_year BETWEEN 2005 and 2010;
 
+
 /*EJERCICIO 17
 Encuentra el título de todas las películas que son de la misma categoría que "Family".
 */
@@ -233,11 +234,7 @@ WHERE c.name like '%Family%'; -- tb se puede hacer c.name ='family'
 
 
 
-
-
-
-
-/*EJERICIO 18
+/*EJERCICIO 18
 Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
 */
 SELECT a.first_name AS nombre_actor,
@@ -268,7 +265,9 @@ GROUP BY  nombre_actor,
 HAVING count(fa.film_id)>10 -- si no quiero que el total peliculas lo vea , lo meto en el having
 ORDER BY  count(fa.film_id)>10 desc;
 
-/*EJERICIO 19
+
+
+/*EJERCICIO 19
 Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la
 tabla film.*/
 
@@ -278,11 +277,76 @@ WHERE rating ='R'AND length>120
 ORDER BY length DESC;-- de la corta a la mas larga y compruebo condicion
 
 
-/*EJERICIO 20
+
+
+/*EJERCICIO 20
 Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y
 muestra el nombre de la categoría junto con el promedio de duración.
-
 */
 
-/*EJERICIO 3
+SELECT 
+    c.name AS categoria,
+    AVG(f.length) AS promedio_duracion
+FROM category AS c
+INNER JOIN film_category AS fc 
+    ON c.category_id = fc.category_id
+INNER JOIN film AS f 
+    ON fc.film_id = f.film_id
+GROUP BY c.name
+HAVING AVG(f.length) > 120
+ORDER BY promedio_duracion ASC; -- compruebo que ninguna esta sobre los 120 minutos
+
+
+
+/*EJERCICIO 21
+Encuentra los actores que han actuado en al menos 5 películas y
+ muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
+ */
+
+SELECT a.first_name AS nombre_actor,
+	   count(fa.film_id) as total_peliculas -- tabla donde se une actor_id y film_id
+FROM actor AS a
+	INNER JOIN film_actor AS fa
+		ON a.actor_id=fa.actor_id
+ GROUP BY  nombre_actor
+HAVING total_peliculas >=5
+ORDER BY total_peliculas ASC; -- ordeno de menos peliculas  a mas para comprobar que no hay ninguno con menos de 5
+
+
+/*EJERCICIO 22
+Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. 
+Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y
+luego selecciona la películas correspondientes.
 */
+
+
+-- primero sacar el tiempo de alquiler
+
+SELECT rental_id,
+		datediff(return_date,rental_date ) as numero_dias_alquilado
+From rental;
+
+-- hacemos conexion entre tablas 
+
+SELECT f.title
+FROM film AS f -- de film a inventory, film_id
+	INNER JOIN inventory AS i
+		ON f.film_id=i.film_id
+	INNER JOIN rental AS r --  de inventory a rental, inventory_id
+		ON i.inventory_id=r.inventory_id;
+        
+        
+
+-- creamos sub-consultas
+
+SELECT DISTINCT f.title as titulo,
+    DATEDIFF(r.return_date, r.rental_date) AS num_dias_alquilado
+FROM film AS f
+	INNER JOIN inventory AS i -- de film a inventory, film_id
+		ON f.film_id = i.film_id
+	INNER JOIN rental AS r -- de inventory a rental , inventory_id
+		ON i.inventory_id = r.inventory_id
+WHERE r.rental_id IN (
+						SELECT rental_id
+						FROM rental
+						WHERE DATEDIFF(return_date, rental_date) > 5);
