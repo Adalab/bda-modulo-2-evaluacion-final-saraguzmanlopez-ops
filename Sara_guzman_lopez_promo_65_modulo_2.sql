@@ -364,9 +364,10 @@ categoría "Horror" y luego exclúyelos de la lista de actores.
 
  -- sacamos la correspondencia de tabla a tabla;
  SELECT 
-    c.name AS categoria,
+    c.name AS categoria, 
     a.first_name AS nombre_actor,
     a.last_name AS apellido_actor
+    
 FROM actor AS a -- de actor a film_actor , actor_id
 		INNER JOIN film_actor AS fa
 			ON a.actor_id=fa.actor_id
@@ -419,4 +420,20 @@ ORDER BY a.last_name, a.first_name;
 
 
 /*EJERCICIO 24
+Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en
+la tabla film.
 */
+
+SELECT f.title as titulo,
+		f.length as duracion,
+        c.name as categoria
+        
+-- necesito 2 tablas pero hay una intermedia, necesito hacer inner join , desde category a film
+FROM  film AS f
+		INNER JOIN film_category AS fc
+				ON f.film_id=fc.film_id
+		INNER JOIN category AS c
+				ON fc.category_id=c.category_id
+                
+ -- desarrollo la condicion
+WHERE f.length > 180  AND c.name = 'Comedy';
