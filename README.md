@@ -60,3 +60,10 @@ ejemplo funciones querys avanzadas con LIKE
 
 ejemplo busqueda varias tablas relacionadas con funciones agregadas 
 (image-1.png)
+
+Ejemplo de busqueda de mejora continua en el aprendizaje y querer poner metas superiores además de lo que pide el examen, en los ejercicios 15 hay un apartado BIS en el que no solo enseño la tabla vacia por lo que se entiende que hay "0" sino que en el ejercicio 15 BIS hago la tabla con el "0" visto!
+(image-3.png)
+
+
+
+Intentando la mejora y demostrar mis habilidades , en el ejercicio 17 BIS muestro  la tabla con el numero de películas en la categoria 'family'(image-2.png)

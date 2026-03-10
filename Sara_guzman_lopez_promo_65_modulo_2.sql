@@ -192,6 +192,7 @@ from film_actor
 ORDER BY actor_id DESC;
 
 -- query final 
+
 SELECT Concat (a.first_name,'  ',a.last_name) as nombre, -- si hubiera alguno ponemos nombre e id de las 2 tablas para localizarlo
 			a.actor_id,
             fa.actor_id
@@ -200,6 +201,20 @@ FROM actor as a
 		ON a.actor_id =fa.actor_id
 WHERE fa.actor_id is null; 
 -- esta query se devuelve vacia por lo tanto hay 0 actores/actrices que no aparezcan en ninguna pelicula de la tabla film_act
+
+
+-- EJERCICIO EXTRA 15 BIS
+-- Query para ver el numero de  actores  que no aparezca en ninguna pelicula e la tabla film_actor
+
+
+SELECT COUNT(fa.actor_id) as numero_actores
+FROM actor as a
+	LEFT JOIN film_actor as fa 
+		ON a.actor_id =fa.actor_id
+WHERE fa.actor_id IS NULL;
+
+
+
 
 /*EJERCICIO 16
 Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010
@@ -222,14 +237,23 @@ where release_year BETWEEN 2005 and 2010;
 /*EJERCICIO 17
 Encuentra el título de todas las películas que son de la misma categoría que "Family".
 */
-
-SELECT f.title -- ,c.name para comprobar la categoria 
+SELECT f.title -- ,c.name -- para comprobar la categoria 
 FROM category AS c
 	INNER JOIN film_category AS fc
 		ON c.category_id=fc.category_id
 	INNER JOIN film AS f
 		ON fc.film_id=f.film_id
 WHERE c.name like '%Family%'; -- tb se puede hacer c.name ='family'
+
+-- EJERCICIO 17 BIS, ENCUENTRA LA CANTIDAD DE PELICULAS QUE SON DE LA MISMA CATEGORIA QUE 'FAMILY'
+
+SELECT COUNT(c.name) as numero_peliculas
+FROM category AS c
+	INNER JOIN film_category AS fc
+		ON c.category_id=fc.category_id
+	INNER JOIN film AS f
+		ON fc.film_id=f.film_id
+WHERE c.name like '%Family%'; -- hay 69 peliculas en la categoria family
 
 
 
